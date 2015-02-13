@@ -61,9 +61,8 @@ class InsertCodePreprocessor(markdown.preprocessors.Preprocessor):
         if code_file_name not in self.list_of_code_files:
             return "No such file as '%s'" % code_file_name
 
-        with open(self.pwd + "/" + code_file_name, "r") as f:
+        with open(self.pwd + code_file_name, "r") as f:
             codes = f.read().split("\n")
-
 
         #parsed_code = ["".join(["    ", line.decode("utf8")]) for line in codes[1:]]
         parsed_code = self._prependTab(codes[1:])
@@ -78,14 +77,16 @@ class InsertCodePreprocessor(markdown.preprocessors.Preprocessor):
         if code_file_name not in self.list_of_code_files:
             return "No such file as '%s'" % code_file_name
 
-        file_name = self.pwd + "/" + code_file_name
-        result = subprocess.check_output(["python", file_name],
+        #print self.pwd
+        file_name = self.pwd + code_file_name
+        sp = subprocess.Popen(["python", file_name],
+                                         stdout=subprocess.PIPE,
                                          stderr=subprocess.STDOUT)
+        stdout, stderr = sp.communicate()
 
-        parsed_result = self._prependTab(result.split("\n"))
+        parsed_result = self._prependTab(stdout.split("\n"))
 
-        return parsed_result
-
+        return [u'    :::text\n'] + parsed_result
 
     def _prependTab(self, list_of_strings):
         # helper function: preappend a tab to every line of list_of_string
@@ -93,6 +94,7 @@ class InsertCodePreprocessor(markdown.preprocessors.Preprocessor):
         # @return: a list of strings with tab in front of it
         tab = "    "
         return ["".join([tab, line.decode("utf8")]) for line in list_of_strings]
+
 
 class InsertCodeExtansion(markdown.Extension):
     def __init__(self, settings):
