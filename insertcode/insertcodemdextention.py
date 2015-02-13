@@ -62,7 +62,8 @@ class InsertCodePreprocessor(markdown.preprocessors.Preprocessor):
             return "No such file as '%s'" % code_file_name
 
         with open(self.pwd + "/" + code_file_name, "r") as f:
-            codes = f.readlines()
+            codes = f.read().split("\n")
+
 
         #parsed_code = ["".join(["    ", line.decode("utf8")]) for line in codes[1:]]
         parsed_code = self._prependTab(codes[1:])
@@ -98,6 +99,7 @@ class InsertCodeExtansion(markdown.Extension):
         self.settings = settings
 
     def extendMarkdown(self, md, md_globals):
+        #print "Add extension to md"
         md.preprocessors.add("insert", InsertCodePreprocessor(self.settings), ">reference")
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ from .insertcodemdextention import InsertCodeExtansion
 
 def addMdExtention(pelicanobj):
     #print issubclass(InsertCodeExtansion, markdown.Extension)
+    #print "Start to add extenson."
     try:
         insert_code_setting = pelicanobj.settings["INSERT_CODE"]
     except:
@@ -16,4 +17,5 @@ def addMdExtention(pelicanobj):
 
 
 def register():
+    #print "Register"
     pelican.signals.initialized.connect(addMdExtention)
