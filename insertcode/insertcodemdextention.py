@@ -84,7 +84,7 @@ class InsertCodePreprocessor(markdown.preprocessors.Preprocessor):
 
         parsed_result = self._prependTab(result.split("\n"))
 
-        return [u'    :::python\n'] + parsed_result
+        return parsed_result
 
 
     def _prependTab(self, list_of_strings):
